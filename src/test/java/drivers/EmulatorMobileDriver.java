@@ -11,21 +11,27 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.ServerSocket;
 import java.net.URL;
 
+import static io.restassured.RestAssured.port;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 public class EmulatorMobileDriver implements WebDriverProvider {
 
     @Override
+
     public WebDriver createDriver(Capabilities capabilities) {
         File app = getApp();
 
         UiAutomator2Options options = new UiAutomator2Options();
         options.merge(capabilities);
         options.setAutomationName(AutomationName.ANDROID_UIAUTOMATOR2);
+        options.setSystemPort(8201);
+        options.setAppWaitForLaunch(false);
+        options.setIgnoreHiddenApiPolicyError(true);
         options.setPlatformName("Android");
-        options.setDeviceName("RFCR90ZMNQP");
+        options.setDeviceName("Pixel 4 API 30");
 //        options.setDeviceName("Pixel_4_API_30");
         options.setPlatformVersion("11.0");
         options.setApp(app.getAbsolutePath());
@@ -33,6 +39,7 @@ public class EmulatorMobileDriver implements WebDriverProvider {
         options.setLanguage("en");
         options.setAppPackage("org.wikipedia.alpha");
         options.setAppActivity("org.wikipedia.main.MainActivity");
+
 
         return new AndroidDriver(getAppiumServerUrl(), options);
     }
@@ -61,5 +68,5 @@ public class EmulatorMobileDriver implements WebDriverProvider {
         }
         return app;
     }
+    }
 
-}
